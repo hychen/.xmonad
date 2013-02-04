@@ -3,6 +3,7 @@
 import Data.Ratio ((%))
 
 import XMonad
+import XMonad.Util.EZConfig
 import XMonad.Config.Gnome
 import XMonad.Hooks.ManageDocks
 import XMonad.Hooks.ManageHelpers
@@ -13,6 +14,10 @@ import XMonad.Layout.Dishes
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.LimitWindows
+
+import qualified XMonad.Prompt         as P
+import qualified XMonad.Actions.Submap as SM
+import qualified XMonad.Actions.Search as S
 
 --------------------------------------------------------------------------
 -- Common
@@ -26,6 +31,11 @@ appIRC  = "Xchat"
 appMail = "Thunderbird"
 appFileM = "Nautilus"
 
+-- Enabled Search Engine
+searchList :: [(String, S.SearchEngine)]
+searchList = [ ("g", S.google)
+             , ("w", S.wikipedia)
+             ]
 --------------------------------------------------------------------------
 -- Manage
 --------------------------------------------------------------------------
@@ -79,6 +89,13 @@ myLogHook = composeAll
             , fadeInactiveLogHook myFadeAmount
             ] 
 
+myKeys =
+ -- Regurlar commands
+ []
+ -- Search commands
+ ++ [("M-f " ++ k, S.promptSearch P.defaultXPConfig f) | (k,f) <- searchList ]
+ ++ [("M-d " ++ k, S.selectSearch f) | (k,f) <- searchList ]
+
 --------------------------------------------------------------------------
 -- Main
 --------------------------------------------------------------------------
@@ -88,5 +105,6 @@ main = do
          , logHook    = myLogHook
          , layoutHook = myLayoutHook
          , workspaces = myWorkspaces
-         , modMask    = mod4Mask 
-         }
+         , modMask    = mod4Mask }
+         `additionalKeysP` myKeys
+
