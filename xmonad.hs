@@ -34,6 +34,7 @@ appFileM = "Nautilus"
 -- Enabled Search Engine
 searchList :: [(String, S.SearchEngine)]
 searchList = [ ("g", S.google)
+             , ("d", S.dictionary)
              , ("w", S.wikipedia)
              ]
 --------------------------------------------------------------------------
