@@ -14,6 +14,8 @@ import XMonad.Layout.Dishes
 import XMonad.Layout.LayoutHints
 import XMonad.Layout.PerWorkspace
 import XMonad.Layout.LimitWindows
+import XMonad.Layout.IM
+import XMonad.Layout.Reflect
 
 import qualified XMonad.Prompt         as P
 import qualified XMonad.Actions.Submap as SM
@@ -26,7 +28,7 @@ myWorkspaces = ["Web", "Dev", "Stage", "File", "Read", "IM", "IRC", "Mail"]
 myFadeAmount = 0.8
 
 -- Prefer Applications (class name)
-appIM   = "pidgin"
+appIM   = "Pidgin"
 appIRC  = "Xchat"
 appMail = "Thunderbird"
 appFileM = "Nautilus"
@@ -74,10 +76,18 @@ myDish = limitWindows 5 $ Dishes nmaster ratio
         -- Default proportion of screen occupied by other panes
         ratio = 1/5
 
--- contexts
 myCode = myWide ||| Full
 
+myChat' l = reflectHoriz $ withIM size roster $ reflectHoriz $ l
+    where
+        -- Ratio of screen roster will occupy
+        size = 1%5
+        -- Match roster window
+        roster = Title "Buddy List"
+myChat = myChat' Grid
+
 perWS = onWorkspace "Dev" myCode $ 
+        onWorkspace "IM" myChat $ 
         onWorkspaces ["Misc", "Stage"] (myDish) $       
         (layoutHook gnomeConfig)
 myLayoutHook = smartBorders . avoidStruts . layoutHints $ perWS
