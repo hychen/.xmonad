@@ -51,6 +51,7 @@ myManageHook = composeAll
                , className =? appIM            --> doShift "IM"
                , className =? appIRC           --> doShift "IRC"
                , className =? appMail          --> doShift "Mail"
+               , className =? "Guake.py"       --> doIgnore
                , resource  =? "Do"             --> doIgnore
                , resource  =? "desktop_window" --> doIgnore
                , isFullscreen                  --> doFullFloat
