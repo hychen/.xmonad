@@ -60,7 +60,7 @@ myManageHook = composeAll
 --------------------------------------------------------------------------
 -- Layout
 --------------------------------------------------------------------------
-mySplit =  magnifiercz' 1.4 $ Tall nmaster delta ratio
+mySplit = Tall nmaster delta ratio
     where
         -- The default number of windows in the master pane
         nmaster = 1
