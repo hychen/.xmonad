@@ -16,6 +16,8 @@ import XMonad.Layout.PerWorkspace
 import XMonad.Layout.LimitWindows
 import XMonad.Layout.IM
 import XMonad.Layout.Reflect
+import XMonad.Layout.Magnifier
+import XMonad.Layout.FixedColumn
 
 import qualified XMonad.Prompt         as P
 import qualified XMonad.Actions.Submap as SM
@@ -24,7 +26,7 @@ import qualified XMonad.Actions.Search as S
 --------------------------------------------------------------------------
 -- Common
 --------------------------------------------------------------------------
-myWorkspaces = ["Web", "Dev", "Stage", "File", "Read", "IM", "IRC", "Mail"]
+myWorkspaces = ["Web", "Zone1", "Zone2", "Zone3", "File", "Read", "IM", "IRC", "Mail", "Stage"]
 myFadeAmount = 0.8
 
 -- Prefer Applications (class name)
@@ -58,6 +60,14 @@ myManageHook = composeAll
 --------------------------------------------------------------------------
 -- Layout
 --------------------------------------------------------------------------
+mySplit =  magnifiercz' 1.4 $ Tall nmaster delta ratio
+    where
+        -- The default number of windows in the master pane
+        nmaster = 1
+        -- Percent of screen to increment by when resizing panes
+        delta   = 3/100
+        -- Default proportion of screen occupied by master pane
+        ratio   = 60/100
 
 -- ref: http://joeyh.name/blog/entry/xmonad_layouts_for_netbooks/
 myWide = Mirror $ Tall nmaster delta ratio
@@ -76,8 +86,6 @@ myDish = limitWindows 5 $ Dishes nmaster ratio
         -- Default proportion of screen occupied by other panes
         ratio = 1/5
 
-myCode = myWide ||| Full
-
 myChat' l = reflectHoriz $ withIM size roster $ reflectHoriz $ l
     where
         -- Ratio of screen roster will occupy
@@ -86,9 +94,19 @@ myChat' l = reflectHoriz $ withIM size roster $ reflectHoriz $ l
         roster = Title "Buddy List"
 myChat = myChat' Grid
 
-perWS = onWorkspace "Dev" myCode $ 
+myCode = limitWindows 3 $ FixedColumn 1 20 80 10
+
+myMirror = Mirror $ Tall 1 (3/100) (1/2)
+
+codeFirst = myCode ||| mySplit ||| myMirror ||| myDish
+splitFirst = mySplit ||| myCode ||| myMirror ||| myDish
+
+perWS = onWorkspace "Web" splitFirst $ 
+        onWorkspace "Zone1" codeFirst $ 
+        onWorkspace "Zone2" codeFirst $ 
+        onWorkspace "Zone3" codeFirst $ 
         onWorkspace "IM" myChat $ 
-        onWorkspaces ["Misc", "Stage"] (myDish) $       
+        onWorkspaces ["Stage"] (myDish) $       
         (layoutHook gnomeConfig)
 myLayoutHook = smartBorders . avoidStruts . layoutHints $ perWS
 
