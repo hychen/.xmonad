@@ -100,12 +100,14 @@ myMirror = Mirror $ Tall 1 (3/100) (1/2)
 
 codeFirst = myCode ||| mySplit ||| myMirror ||| myDish
 splitFirst = mySplit ||| myCode ||| myMirror ||| myDish
+mirrorFirst = myMirror ||| mySplit ||| myCode ||| myDish
 
 perWS = onWorkspace "Web" splitFirst $ 
         onWorkspace "Zone1" codeFirst $ 
         onWorkspace "Zone2" codeFirst $ 
         onWorkspace "Zone3" codeFirst $ 
         onWorkspace "IM" myChat $ 
+        onWorkspace "IRC" mirrorFirst $ 
         onWorkspaces ["Stage"] (myDish) $       
         (layoutHook gnomeConfig)
 myLayoutHook = smartBorders . avoidStruts . layoutHints $ perWS
