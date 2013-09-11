@@ -27,7 +27,7 @@ import qualified XMonad.Actions.Search as S
 -- Common
 --------------------------------------------------------------------------
 myWorkspaces = ["Web", "Zone1", "Zone2", "Zone3", "File", "Read", "IM", "IRC", "Mail", "Stage"]
-myFadeAmount = 0.8
+myFadeAmount = 0.95
 
 -- Prefer Applications (class name)
 appIM   = "Pidgin"
